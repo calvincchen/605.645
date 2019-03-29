@@ -104,10 +104,12 @@ def gradient_descent(data, alpha, epsilon, reg_type, debug):
     xs = data[:,:-1]
     ys = data[:,-1]
 
-    theta = [random.randrange(-1, 1) for _ in range(len(xs[0])+1)]
+    theta = [0.24, -0.89, -0.53] #[random.randint(-100, 100)/100 for _ in range(len(xs[0])+1)]
     previous_error = 0
     y_hat = calculate_y_hat(theta, xs, reg_type)
     current_error = calculate_error(ys, y_hat, reg_type)
+    print(y_hat)
+    print(current_error)
     while abs(current_error - previous_error) > epsilon:
         if debug:
             print("Current error: " + str(current_error))
@@ -172,7 +174,7 @@ def calculate_linear_y_hat(theta, xs):
     y_hat = []
     for row in xs:
         temp = 0
-        for col_idx in range(len(row)-1):
+        for col_idx in range(len(row)):
             temp += row[col_idx] * theta[col_idx+1]
         temp += theta[0]
         y_hat.append(temp)
@@ -189,7 +191,7 @@ def calculate_log_y_hat(theta, xs):
     y_hat = []
     for row in xs:
         z = 0
-        for col_idx in range(len(row)-1):
+        for col_idx in range(len(row)):
             z += row[col_idx] * theta[col_idx+1]
         z += theta[0]
         z = 1 / (1 + exp(-z))
@@ -244,6 +246,7 @@ def derivative(theta, xs, ys, y_hat):
     :param xs: List of Lists of x's, where inner lists represent expressions. Note that inner lists trail theta by 1 index b/c x_0
     :param ys: List of actual y values
     :param y_hat: List of expected y values
+    :return list of derivatives of one per theta
     '''
     # should have one derivative per column
     # return array of derivatives?
@@ -278,10 +281,10 @@ if __name__ == "__main__":
     for point in data[0:10]:
         print(point[-1], apply_linear_regression(linear_regression_model, point[:-1]))
     
-    
+    '''
     data = read_data("logistic_regression.csv")
     logistic_regression_model = learn_logistic_regression(data, debug)
     print("logistic regression model: ", logistic_regression_model)
     for point in data[0:10]:
         print(point[-1], apply_logistic_regression(logistic_regression_model, point[:-1]))
-        
+    '''   
