@@ -122,7 +122,7 @@ def gradient_descent(data, alpha, epsilon, reg_type, debug):
         y_hat = calculate_y_hat(theta, xs, reg_type)
         current_error = calculate_error(ys, y_hat, reg_type)
         if previous_error < current_error:
-            alpha *= 10
+            alpha /= 10
         else:
             alpha = .1
 
@@ -138,7 +138,7 @@ def calculate_y_hat(theta, xs, reg_type):
 
     if reg_type == 'linear':
         return calculate_linear_y_hat(theta, xs)
-    elif reg_type == 'log'
+    elif reg_type == 'log':
         return calculate_log_y_hat(theta, xs)
     else:
         print("Expected 'linear' or 'log' as regression type. Invalid regression type provided")
