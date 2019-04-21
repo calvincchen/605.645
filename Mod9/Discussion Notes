@@ -1,0 +1,78 @@
+1. We often want to know how well a model will perform on unseen data, that is, we want to get a sense of the generalization error. What is the name of the technique described in the lectures for accomplishing this. Sketch an algorithm for implementing this technique.
+
+For regression, we can look at mean squared error to estimate how well the model will perform. For classification, we can look at performance metrics like accuracy, error, precision, and recall.
+
+def MSE(expected, x_values, regression):
+	sum_error_squared = 0
+	for x, e in x_values, expected:
+		actual = regression(x)
+		error = a - actual
+		sum_error_squared += error * error
+	mean_squared_error = sum_error_squared / len(x_values)
+	return mean_squared_error
+
+def classification_metrics(TP, FP, TN, FN):
+	accuracy = (TP + TN) / (TP + FP + TN + FN)
+	error = (FP + FN) / (TP + FP + TN + FN)
+	precision = TP / (TP + FP)
+	recall = TP / (TP + FN)
+	return accuracy, error, precision, recall
+
+
+2. One of the first things people think of when trying to improve models is to get more data where "more data" is more observations (another view of "more data" is more features). What technique can we use to see if getting more observations will improve the performance of our model? Sketch an algorithm for accomplishing this.
+
+We need to evaluate the bias-variance tradeoff and how the model performs on the training set vs the test set. More data only helps when the model is underfitting. We can examine the type of bias in our system by picking training set folds and test set folds of various sized slices of the original data. As we train the model on increasing proportion of data, we retain the error scores when we apply the model to both the test and train data sets. We can map out these scores in error lines, which shows us if the model has high or low bias. If the lines converge, it is high bias, and increased amount of data will not help improve the model.
+
+
+
+def slice(x_values, proportion):
+	randomly select proportion of data as test data
+	return train data, remainder data
+
+def crossvalidation(data, num_blocks):
+	randomly distribute data equally into num_locks
+	return list of lists, where each list is a block of data
+
+def error_graph(data): # assume fomat in Mod8 where data contains both x values and expected result
+	train_error = []
+	test_error = []
+	p = []
+	blocked_data = crossvalidation(data, 5)
+	train_data = blocked_data[0] + blocked_data[1] + blocked_data[2] + blocked_data[3]
+	test_data = blocked_data[5]
+	for proportion in range(5, 100, 5): # determine step size here
+		temp_train_data = slice(train_data, proportion)
+		model = regression(temp_train_data, expected_values_for_train_data)
+		train_error += [MSE(expected_values_for_train_data, temp_train_data, model)]
+		test_error += [MSE(expected_values_for_test_data, test_data, model)]
+		p += [proportion]
+	plot (p, train_error)
+	plot (p, test_error)
+	# check if there is low or high bias visually by seeing if the error converge at 100%
+
+
+
+
+3. Many algorithms have "hyper parameters" which control the performance of the algorithm independent of strictly data considerations. For example, a neural network can have 1 or 2 hidden layers and each layer can have N or M nodes. For logistic regression, a default threshold of 0.5 is often used for deciding if the classification should be 0 or 1 but that may not be the best value for our particular problem. What technique can we use to see check the values of our "hyper parameters"? Sketch an algorithm for accomplishing this.
+
+
+We want to observe the effects of different thresholds on our test data, so that we can find the inflection point, or sweet spot between underfitting and overfitting. One way to do this is by testing different threshold points, let's say it .1 increments, graphing the the resultant MSE of the test data.
+
+def find_inflection_point(data):
+	# using functions defined in previous questions
+
+	blocked_data = crossvalidation(data, 5)
+	train_data = blocked_data[0] + blocked_data[1] + blocked_data[2] + blocked_data[3]
+	test_data = blocked_data[5]
+
+	test_mse = []
+	threshold = []
+	model = regression(train_data, expected_values_for_train_data)
+
+	for t in range(0, 1.1, .1):
+		threshold += [t]
+		test_mse += [mse(expected_train_results, train_x_values, model)]
+
+	# should be a roughly parabolic graph that we need to find the x value at minimum for
+	generate parabolic function
+	find x at min error

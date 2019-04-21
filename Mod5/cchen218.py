@@ -328,7 +328,7 @@ if __name__ == "__main__":
         "f": lambda xs: shifted_sphere( 0.5, xs),
         "minimization": True,
         "population_size": 100, 
-        "generations": 200,
+        "generations": 5000,
         "mutation_rate": .05, 
         "crossover_rate": .9
         # put other parameters in here, add , to previous line.
